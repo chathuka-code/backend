@@ -1,50 +1,20 @@
-const sql = require('mssql/msnodesqlv8');
+const express = require('express');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
 
-// Create a database configuration
-var config = {
-  server: 'DESKTOP-7B80IM0', // e.g., 'DESKTOP_mjsi\\MSSQLEXPRESS'
-  database: 'pos',
-  user: '', // Please read above note about SQL authentication
-  password: '', // Please read above note about SQL authentication
-  options: {
-    trustedConnection: true, // Enable Windows Authentication
-  },
-  port: 1433, // Default port number
-  driver: 'msnodesqlv8', // Use the msnodesqlv8 driver
-};
+const app = express();
+const PORT = 3000;
 
-// Note: Double (\\) before your instance name if using an instance name (e.g., 'DESKTOP\\SQLINSTANCE')
+// Middleware
+app.use(express.json());
 
-// Function to connect to the database and run the query
-async function runQuery() {
-  try {
-    // Attempt to connect to the database
-    await sql.connect(config);
-    console.log('Database connection successful.');
+// Routes
+app.use('/api/products', productRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/supplier', supplierRoutes); 
 
-    // Create a request object
-    var request = new sql.Request();
-
-    // Make the query (Replace this with your actual SQL query)
-    var query = 'SELECT * FROM Category'; // e.g., "SELECT * FROM tbl_name"
-
-    // Execute the query
-    const result = await request.query(query);
-    console.log('Query results: ', result.recordset); // Output the query results
-
-  } catch (err) {
-    // Handle errors that may occur during connection or query execution
-    console.error('Error during database operation: ', err.message);
-  } finally {
-    // Always close the connection, even if there was an error
-    try {
-      await sql.close();
-      console.log('Database connection closed.');
-    } catch (err) {
-      console.error('Error closing the database connection: ', err.message);
-    }
-  }
-}
-
-// Run the query
-runQuery();
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

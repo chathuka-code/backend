@@ -1,3 +1,6 @@
+const config = require('./db/dbConfig'); // Import the configuration
+const sql = require('mssql/msnodesqlv8');
+
 const express = require('express');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -13,6 +16,8 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/supplier', supplierRoutes); 
+
+
 
 // Start server
 app.listen(PORT, () => {
